@@ -2,11 +2,13 @@ package com.example.market.controller;
 
 import com.example.market.dto.CommentDTO;
 import com.example.market.dto.CommentResponseDTO;
+import com.example.market.dto.ItemResponseDTO;
 import com.example.market.dto.ResponseDTO;
 import com.example.market.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,8 +27,8 @@ public class CommentController {
     }
 
     @GetMapping
-    public CommentResponseDTO read(@PathVariable("itemId") Long itemId) {
-        return null;
+    public Page<CommentResponseDTO> readAll(@PathVariable("itemId") Long itemId, @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "0") Integer limit) {
+        return commentService.readAllComment(itemId, page, limit);
     }
 
     @PutMapping("/{commentId}")
