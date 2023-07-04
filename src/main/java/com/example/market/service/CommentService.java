@@ -72,4 +72,23 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    @Transactional
+    public void deleteComment(Long itemId, Long commentId, CommentDTO commentDTO) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if(optionalComment.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Comment comment = optionalComment.get();
+
+        if(!itemId.equals(comment.getItemId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if(!commentDTO.getPassword().equals(comment.getPassword())) {
+            // * exception
+        }
+
+        commentRepository.deleteById(commentId);
+    }
+
 }

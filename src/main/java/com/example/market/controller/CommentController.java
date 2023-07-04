@@ -45,8 +45,9 @@ public class CommentController {
         return responseDTO;
     }
 
-    @DeleteMapping("")
-    public ResponseDTO delete(@PathVariable("itemId") Long itemId) {
+    @DeleteMapping("/{commentId}")
+    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentDTO commentDTO) {
+        commentService.deleteComment(itemId, commentId, commentDTO);
         ResponseDTO responseDTO = new ResponseDTO("댓글을 삭제했습니다.");
         return responseDTO;
     }
