@@ -1,10 +1,12 @@
 package com.example.market.controller;
 
 import com.example.market.dto.NegotiationDTO;
+import com.example.market.dto.NegotiationResponseDTO;
 import com.example.market.dto.ResponseDTO;
 import com.example.market.service.NegotiationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +21,11 @@ public class NegotiationController {
         negotiationService.createNego(itemId, negotiationDTO);
         ResponseDTO responseDTO = new ResponseDTO("구매 제안이 등록되었습니다.");
         return responseDTO;
+    }
+
+    @GetMapping
+    public Page<NegotiationResponseDTO> read(@PathVariable("itemId") Long itemId, @RequestParam("writer") String writer, @RequestParam("password") String password, @RequestParam("page") Integer pageNumber) {
+        return negotiationService.read(itemId, writer, password, pageNumber);
     }
 
 }
