@@ -1,7 +1,7 @@
 package com.example.market.service;
 
-import com.example.market.dto.ItemResponseDTO;
-import com.example.market.dto.SalesItemDTO;
+import com.example.market.dto.item.ItemResponseDTO;
+import com.example.market.dto.item.SalesItemDTO;
 import com.example.market.entity.SalesItem;
 import com.example.market.repository.SalesItemRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;

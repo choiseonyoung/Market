@@ -1,8 +1,7 @@
 package com.example.market.service;
 
-import com.example.market.dto.CommentDTO;
-import com.example.market.dto.CommentResponseDTO;
-import com.example.market.dto.ItemResponseDTO;
+import com.example.market.dto.comment.CommentDTO;
+import com.example.market.dto.comment.CommentResponseDTO;
 import com.example.market.entity.Comment;
 import com.example.market.entity.SalesItem;
 import com.example.market.repository.CommentRepository;
@@ -12,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

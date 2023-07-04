@@ -1,8 +1,7 @@
 package com.example.market.controller;
 
-import com.example.market.dto.CommentDTO;
-import com.example.market.dto.CommentResponseDTO;
-import com.example.market.dto.ItemResponseDTO;
+import com.example.market.dto.comment.CommentDTO;
+import com.example.market.dto.comment.CommentResponseDTO;
 import com.example.market.dto.ResponseDTO;
 import com.example.market.service.CommentService;
 import jakarta.validation.Valid;

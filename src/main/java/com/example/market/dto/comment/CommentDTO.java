@@ -1,4 +1,4 @@
-package com.example.market.dto;
+package com.example.market.dto.comment;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

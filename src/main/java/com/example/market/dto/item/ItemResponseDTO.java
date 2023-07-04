@@ -1,4 +1,4 @@
-package com.example.market.dto;
+package com.example.market.dto.item;
 
 import com.example.market.entity.SalesItem;
 import lombok.Builder;

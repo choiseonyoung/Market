@@ -1,4 +1,4 @@
-package com.example.market.dto;
+package com.example.market.dto.comment;
 
 import com.example.market.entity.Comment;
 import lombok.Builder;
