@@ -32,7 +32,8 @@ public class CommentController {
     }
 
     @PutMapping("/{commentId}")
-    public ResponseDTO update(@PathVariable("itemId") Long itemId, @RequestBody @Valid CommentDTO commentDTO) {
+    public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentDTO commentDTO) {
+        commentService.updateComment(itemId, commentId, commentDTO);
         ResponseDTO responseDTO = new ResponseDTO("댓글이 수정되었습니다.");
         return responseDTO;
     }

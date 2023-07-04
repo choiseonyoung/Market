@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -47,6 +49,27 @@ public class CommentService {
         Page<Comment> commentPage = commentRepository.findAllByItemId(pageable, itemId);
         Page<CommentResponseDTO> CommentResponseDTOPage = commentPage.map(CommentResponseDTO::fromEntity);
         return CommentResponseDTOPage;
+    }
+
+    @Transactional
+    public void updateComment(Long itemId, Long commentId, CommentDTO commentDTO) {
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if(optionalComment.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Comment comment = optionalComment.get();
+
+        if(!itemId.equals(comment.getItemId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if(!commentDTO.getPassword().equals(comment.getPassword())) {
+            // * exception
+        }
+
+        comment.setContent(commentDTO.getContent());
+
+        commentRepository.save(comment);
     }
 
 }
