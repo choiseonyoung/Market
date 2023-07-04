@@ -38,9 +38,11 @@ public class CommentController {
         return responseDTO;
     }
 
-    // * 답글수정
     @PutMapping("/{commentId}/reply")
-    public ResponseDTO updateReply(@PathVariable("itemId") Long itemId) {
+    public ResponseDTO updateReply(@PathVariable("itemId") Long itemId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentDTO commentDTO) {
+
+        commentService.updateReply(itemId, commentId, commentDTO);
+
         ResponseDTO responseDTO = new ResponseDTO("댓글에 답변이 추가되었습니다.");
         return responseDTO;
     }

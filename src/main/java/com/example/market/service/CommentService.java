@@ -73,6 +73,30 @@ public class CommentService {
     }
 
     @Transactional
+    public void updateReply(Long itemId, Long commentId, CommentDTO commentDTO) {
+        Optional<SalesItem> optionalItem = salesItemRepository.findById(itemId);
+        if(optionalItem.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        SalesItem salesItem = optionalItem.get();
+
+        if(!salesItem.getWriter().equals(commentDTO.getWriter()) || !salesItem.getPassword().equals(commentDTO.getPassword())) {
+            // * exception
+            log.error("안됨안됨");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Comment> optionalComment = commentRepository.findById(commentId);
+        if(optionalComment.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        Comment comment = optionalComment.get();
+        comment.setReply(commentDTO.getReply());
+        commentRepository.save(comment);
+    }
+
+    @Transactional
     public void deleteComment(Long itemId, Long commentId, CommentDTO commentDTO) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if(optionalComment.isEmpty()) {
