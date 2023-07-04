@@ -35,4 +35,13 @@ public class NegotiationController {
         return responseDTO;
     }
 
+    @DeleteMapping("/{proposalId}")
+    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, NegotiationDTO negotiationDTO) {
+        negotiationService.deleteNego(itemId, proposalId, negotiationDTO);
+        ResponseDTO responseDTO = new ResponseDTO("제안을 삭제했습니다.");
+        return responseDTO;
+    }
+
+
+
 }

@@ -92,4 +92,22 @@ public class NegotiationService {
         negotiationRepository.save(negotiation);
     }
 
+    @Transactional
+    public void deleteNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
+        Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
+        if(optionalNegotiation.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Negotiation negotiation = optionalNegotiation.get();
+
+        if(!itemId.equals(negotiation.getItemId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if(!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
+            // * exception
+        }
+
+        negotiationRepository.deleteById(proposalId);
+    }
 }
