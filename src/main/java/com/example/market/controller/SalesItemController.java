@@ -55,8 +55,8 @@ public class SalesItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long id) {
-        salesItemService.deleteItem(id);
+    public ResponseDTO delete(@PathVariable("itemId") Long id, SalesItemDTO salesItemDTO) {
+        salesItemService.deleteItem(id, salesItemDTO);
         ResponseDTO responseDTO = new ResponseDTO("물품을 삭제했습니다.");
         return responseDTO;
     }

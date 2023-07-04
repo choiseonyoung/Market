@@ -10,9 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -108,13 +111,19 @@ public class SalesItemService {
     }
 
     @Transactional
-    public void deleteItem(Long id) {
-        if (salesItemRepository.existsById(id)) {
-            salesItemRepository.deleteById(id);
-        } else {
-            // * exception
-            log.error("delete 일치하는 id 없음");
+    public void deleteItem(Long id, SalesItemDTO salesItemDTO) {
+        Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
+        if(optionalItem.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+
+        SalesItem salesItem = optionalItem.get();
+
+        if(!salesItem.getPassword().equals(salesItemDTO.getPassword())) {
+            // * exception
+        }
+
+        salesItemRepository.deleteById(id);
     }
 
 }
