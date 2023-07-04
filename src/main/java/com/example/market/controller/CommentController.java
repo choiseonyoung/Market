@@ -1,0 +1,51 @@
+package com.example.market.controller;
+
+import com.example.market.dto.CommentDTO;
+import com.example.market.dto.CommentResponseDTO;
+import com.example.market.dto.ResponseDTO;
+import com.example.market.service.CommentService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@Slf4j
+@RequestMapping("/items/{itemId}/comments")
+@RequiredArgsConstructor
+public class CommentController {
+
+    private final CommentService commentService;
+
+    @PostMapping
+    public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid CommentDTO commentDTO) {
+        commentService.createComment(itemId, commentDTO);
+        ResponseDTO responseDTO = new ResponseDTO("댓글이 등록되었습니다.");
+        return responseDTO;
+    }
+
+    @GetMapping
+    public CommentResponseDTO read(@PathVariable("itemId") Long itemId) {
+        return null;
+    }
+
+    @PutMapping("/{commentId}")
+    public ResponseDTO update(@PathVariable("itemId") Long itemId, @RequestBody @Valid CommentDTO commentDTO) {
+        ResponseDTO responseDTO = new ResponseDTO("댓글이 수정되었습니다.");
+        return responseDTO;
+    }
+
+    // * 답글수정
+    @PutMapping("/{commentId}/reply")
+    public ResponseDTO updateReply(@PathVariable("itemId") Long itemId) {
+        ResponseDTO responseDTO = new ResponseDTO("댓글에 답변이 추가되었습니다.");
+        return responseDTO;
+    }
+
+    @DeleteMapping("")
+    public ResponseDTO delete(@PathVariable("itemId") Long itemId) {
+        ResponseDTO responseDTO = new ResponseDTO("댓글을 삭제했습니다.");
+        return responseDTO;
+    }
+
+}
