@@ -1,14 +1,13 @@
 package com.example.market.service;
 
-import com.example.market.dto.NegotiationDTO;
-import com.example.market.dto.NegotiationResponseDTO;
-import com.example.market.entity.Comment;
+import com.example.market.dto.negotiation.NegotiationDTO;
+import com.example.market.dto.negotiation.NegotiationResponseDTO;
+import com.example.market.dto.negotiation.NegotiationStatusDTO;
 import com.example.market.entity.Negotiation;
 import com.example.market.entity.SalesItem;
 import com.example.market.repository.NegotiationRepository;
 import com.example.market.repository.SalesItemRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -109,5 +108,30 @@ public class NegotiationService {
         }
 
         negotiationRepository.deleteById(proposalId);
+    }
+
+    @Transactional
+    public void updateProposal(Long itemId, Long proposalId, NegotiationStatusDTO negotiationStatusDTO) {
+        Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
+        if(optionalNegotiation.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Negotiation negotiation = optionalNegotiation.get();
+
+        if(!itemId.equals(negotiation.getItemId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
+        SalesItem salesItem = optionalSalesItem.get();
+
+        if(!negotiationStatusDTO.getWriter().equals(salesItem.getWriter()) || !negotiationStatusDTO.getPassword().equals(salesItem.getPassword())) {
+            // * exception
+        }
+
+        negotiation.setStatus(negotiationStatusDTO.getStatus());
+
+        negotiationRepository.save(negotiation);
     }
 }

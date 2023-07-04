@@ -1,8 +1,9 @@
 package com.example.market.controller;
 
-import com.example.market.dto.NegotiationDTO;
-import com.example.market.dto.NegotiationResponseDTO;
+import com.example.market.dto.negotiation.NegotiationDTO;
+import com.example.market.dto.negotiation.NegotiationResponseDTO;
 import com.example.market.dto.ResponseDTO;
+import com.example.market.dto.negotiation.NegotiationStatusDTO;
 import com.example.market.service.NegotiationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,13 +36,18 @@ public class NegotiationController {
         return responseDTO;
     }
 
+    @PutMapping("/{proposalId}")
+    public ResponseDTO updateProposal(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationStatusDTO negotiationStatusDTO) {
+        negotiationService.updateProposal(itemId, proposalId, negotiationStatusDTO);
+        ResponseDTO responseDTO = new ResponseDTO("제안의 상태가 변경되었습니다.");
+        return responseDTO;
+    }
+
     @DeleteMapping("/{proposalId}")
     public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, NegotiationDTO negotiationDTO) {
         negotiationService.deleteNego(itemId, proposalId, negotiationDTO);
         ResponseDTO responseDTO = new ResponseDTO("제안을 삭제했습니다.");
         return responseDTO;
     }
-
-
 
 }

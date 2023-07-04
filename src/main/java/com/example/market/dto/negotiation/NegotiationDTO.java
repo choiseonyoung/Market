@@ -1,4 +1,4 @@
-package com.example.market.dto;
+package com.example.market.dto.negotiation;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

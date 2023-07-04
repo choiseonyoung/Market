@@ -1,6 +1,5 @@
-package com.example.market.dto;
+package com.example.market.dto.negotiation;
 
-import com.example.market.entity.Comment;
 import com.example.market.entity.Negotiation;
 import lombok.Builder;
 import lombok.Getter;
