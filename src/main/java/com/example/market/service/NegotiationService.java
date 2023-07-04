@@ -2,6 +2,7 @@ package com.example.market.service;
 
 import com.example.market.dto.NegotiationDTO;
 import com.example.market.dto.NegotiationResponseDTO;
+import com.example.market.entity.Comment;
 import com.example.market.entity.Negotiation;
 import com.example.market.entity.SalesItem;
 import com.example.market.repository.NegotiationRepository;
@@ -43,7 +44,7 @@ public class NegotiationService {
     }
 
     @Transactional
-    public Page<NegotiationResponseDTO> read(Long itemId, String writer, String password, Integer pageNumber) {
+    public Page<NegotiationResponseDTO> readNego(Long itemId, String writer, String password, Integer pageNumber) {
 
         Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
         if (optionalSalesItem.isEmpty()) {
@@ -68,6 +69,27 @@ public class NegotiationService {
         Page<NegotiationResponseDTO> negoDtoPage = negotiationPage.map(NegotiationResponseDTO::fromEntity);
         return negoDtoPage;
 
+    }
+
+    @Transactional
+    public void updateNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
+        Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
+        if(optionalNegotiation.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Negotiation negotiation = optionalNegotiation.get();
+
+        if(!itemId.equals(negotiation.getItemId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if(!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
+            // * exception
+        }
+
+        negotiation.setSuggestedPrice(negotiationDTO.getSuggestedPrice());
+
+        negotiationRepository.save(negotiation);
     }
 
 }

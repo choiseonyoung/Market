@@ -25,7 +25,14 @@ public class NegotiationController {
 
     @GetMapping
     public Page<NegotiationResponseDTO> read(@PathVariable("itemId") Long itemId, @RequestParam("writer") String writer, @RequestParam("password") String password, @RequestParam("page") Integer pageNumber) {
-        return negotiationService.read(itemId, writer, password, pageNumber);
+        return negotiationService.readNego(itemId, writer, password, pageNumber);
+    }
+
+    @PutMapping("/{proposalId}")
+    public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationDTO negotiationDTO) {
+        negotiationService.updateNego(itemId, proposalId, negotiationDTO);
+        ResponseDTO responseDTO = new ResponseDTO("제안이 수정되었습니다.");
+        return responseDTO;
     }
 
 }
