@@ -45,7 +45,7 @@ public class CommentService {
 
     @Transactional
     public Page<CommentResponseDTO> readAllComment(Long itemId, Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
         Page<Comment> commentPage = commentRepository.findAllByItemId(pageable, itemId);
         Page<CommentResponseDTO> CommentResponseDTOPage = commentPage.map(CommentResponseDTO::fromEntity);
         return CommentResponseDTOPage;
