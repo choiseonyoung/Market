@@ -1,0 +1,120 @@
+package com.example.market.service;
+
+import com.example.market.dto.ItemResponseDTO;
+import com.example.market.dto.SalesItemDTO;
+import com.example.market.entity.SalesItem;
+import com.example.market.repository.SalesItemRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.UUID;
+
+@Service
+@Slf4j
+@RequiredArgsConstructor
+public class SalesItemService {
+
+    private final SalesItemRepository salesItemRepository;
+
+    @Transactional
+    public void saveItem(SalesItemDTO salesItemDTO) {
+        SalesItem salesItem = SalesItem.builder()
+                .title(salesItemDTO.getTitle())
+                .description(salesItemDTO.getDescription())
+                .iamgeUrl(salesItemDTO.getIamgeUrl())
+                .minPriceWanted(salesItemDTO.getMinPriceWanted())
+                .status("판매중")
+                .writer(salesItemDTO.getWriter())
+                .password(salesItemDTO.getPassword()).build();
+        salesItemRepository.save(salesItem);
+    }
+
+    @Transactional
+    public Page<ItemResponseDTO> readAllItem(Integer pageNumber, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
+        Page<SalesItem> salesItemPage = salesItemRepository.findAll(pageable);
+        Page<ItemResponseDTO> itemDtoPage = salesItemPage.map(ItemResponseDTO::fromEntity);
+        return itemDtoPage;
+    }
+
+    @Transactional
+    public ItemResponseDTO readItem(Long id) {
+        Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
+        if (optionalItem.isEmpty()) {
+            // * exception
+            log.error("get 일치하는 id 없음");
+        }
+        return ItemResponseDTO.fromEntity(optionalItem.get());
+    }
+
+    @Transactional
+    public void updateItem(Long id, SalesItemDTO salesItemDTO) {
+        Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
+        if (optionalItem.isEmpty()) {
+            // * exception
+            log.error("update 일치하는 id 없음");
+        }
+
+        SalesItem salesItem = optionalItem.get();
+
+        // password 맞게 입력했는지 확인
+        if (!salesItem.getPassword().equals(salesItemDTO.getPassword())) {
+            // * exception
+            log.error("update 비밀번호 불일치");
+        }
+
+        salesItem.setTitle(salesItemDTO.getTitle());
+        salesItem.setDescription(salesItemDTO.getDescription());
+        salesItem.setMinPriceWanted(salesItemDTO.getMinPriceWanted());
+
+        salesItemRepository.save(salesItem);
+    }
+
+    public void updateImage(Long id, MultipartFile multipartFile, String writer, String password) throws IOException {
+        // 유저 정보 확인
+        Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
+        if(optionalItem.isEmpty()) {
+            // * exception
+            log.error("update image 일치하는 id 없음");
+        }
+
+        SalesItem salesItem = optionalItem.get();
+
+        // password 맞게 입력했는지 확인
+        if (!salesItem.getPassword().equals(password)) {
+            // * exception
+            log.error("update image 비밀번호 불일치");
+        }
+
+        // 저장 경로 생성
+        Files.createDirectories(Path.of("images"));
+        String[] exArr = multipartFile.getOriginalFilename().split("\\.");
+        Path uploadTo = Path.of(String.format("images/%s", UUID.randomUUID() + "." + exArr[1]));
+        multipartFile.transferTo(uploadTo);
+
+        salesItem.setIamgeUrl(uploadTo.toString());
+        salesItemRepository.save(salesItem);
+    }
+
+    @Transactional
+    public void deleteItem(Long id) {
+        if (salesItemRepository.existsById(id)) {
+            salesItemRepository.deleteById(id);
+        } else {
+            // * exception
+            log.error("delete 일치하는 id 없음");
+        }
+    }
+
+}
