@@ -1,6 +1,7 @@
 package com.example.market.service;
 
 import com.example.market.dto.item.ItemResponseDTO;
+import com.example.market.dto.item.ItemUserDTO;
 import com.example.market.dto.item.SalesItemDTO;
 import com.example.market.entity.SalesItem;
 import com.example.market.repository.SalesItemRepository;
@@ -102,7 +103,7 @@ public class SalesItemService {
     }
 
     @Transactional
-    public void deleteItem(Long id, SalesItemDTO salesItemDTO) {
+    public void deleteItem(Long id, ItemUserDTO itemUserDTO) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if(optionalItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -110,8 +111,8 @@ public class SalesItemService {
 
         SalesItem salesItem = optionalItem.get();
 
-        if(!salesItem.getWriter().equals(salesItemDTO.getWriter()) || !salesItem.getPassword().equals(salesItemDTO.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        if(!salesItem.getWriter().equals(itemUserDTO.getWriter()) || !salesItem.getPassword().equals(itemUserDTO.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         salesItemRepository.deleteById(id);

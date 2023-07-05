@@ -2,6 +2,7 @@ package com.example.market.controller;
 
 import com.example.market.dto.item.ItemResponseDTO;
 import com.example.market.dto.ResponseDTO;
+import com.example.market.dto.item.ItemUserDTO;
 import com.example.market.dto.item.SalesItemDTO;
 import com.example.market.service.SalesItemService;
 import jakarta.validation.Valid;
@@ -51,8 +52,8 @@ public class SalesItemController {
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long id, SalesItemDTO salesItemDTO) {
-        salesItemService.deleteItem(id, salesItemDTO);
+    public ResponseDTO delete(@PathVariable("itemId") Long id, @RequestBody @Valid ItemUserDTO itemUserDTO) {
+        salesItemService.deleteItem(id, itemUserDTO);
         return new ResponseDTO("물품을 삭제했습니다.");
     }
 
