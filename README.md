@@ -1,9 +1,9 @@
 # ♻️멋사 마켓
 > 🥕 당근마켓, 중고나라 등을 착안하여 중고 제품 거래 플랫폼을 만들어보는 미니 프로젝트입니다.
-> 사용자가 중고 물품을 자유롭게 올리고, 댓글을 통해 소통하며, 최종적으로 구매 제안에 대하여 수락할 수 있는 형태의 중고 거래 플랫폼 백엔드를 구현했습니다.
+> 사용자가 중고 물품을 자유롭게 올리고, 댓글을 통해 소통하며, 최종적으로 구매 제안에 대하여 수락할 수 있는 형태의 중고 거래 플랫폼 백엔드를 구현했습니다.   
 
 ## 📆 개발 기간
-2022.06.29 ~ 2023.07.05
+2022.06.29 ~ 2023.07.05   
 
 ## 🔨 개발 환경
 - IDE : IntelliJ
@@ -15,10 +15,11 @@
   - Spring Data JPA
   - Spring Boot DevTools
   - Lombok
-  - Validation
+  - Validation   
 
 ## 📋 ERD
-![img.png](img.png)
+
+<img width="770" alt="erd" src="https://github.com/likelion-backend-5th/MiniProject_Basic_ChoiSeonYoung/assets/44860284/05f94f30-ea34-4fae-a8f9-d7a4ee6d7132">   
 
 ## 📌 구현 기능
 ### 1️⃣ 중고 물품 관리
