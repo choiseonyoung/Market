@@ -18,7 +18,7 @@ public class NegotiationController {
 
     @PostMapping
     public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
-        negotiationService.createNego(itemId, negotiationDTO);
+        negotiationService.saveNego(itemId, negotiationDTO);
         return new ResponseDTO("구매 제안이 등록되었습니다.");
     }
 

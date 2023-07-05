@@ -27,7 +27,7 @@ public class CommentService {
     private final SalesItemRepository salesItemRepository;
 
     @Transactional
-    public void createComment(Long itemId, CommentDTO commentDTO) {
+    public void saveComment(Long itemId, CommentDTO commentDTO) {
         if(!salesItemRepository.existsById(itemId)) {
             log.error("에러");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

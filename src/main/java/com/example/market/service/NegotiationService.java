@@ -25,7 +25,7 @@ public class NegotiationService {
     private final NegotiationRepository negotiationRepository;
     private final SalesItemRepository salesItemRepository;
 
-    public void createNego(Long itemId, NegotiationDTO negotiationDTO) {
+    public void saveNego(Long itemId, NegotiationDTO negotiationDTO) {
         if (!salesItemRepository.existsById(itemId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }

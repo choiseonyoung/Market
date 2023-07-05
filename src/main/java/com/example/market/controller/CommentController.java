@@ -20,7 +20,7 @@ public class CommentController {
 
     @PostMapping
     public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid CommentDTO commentDTO) {
-        commentService.createComment(itemId, commentDTO);
+        commentService.saveComment(itemId, commentDTO);
         return new ResponseDTO("댓글이 등록되었습니다.");
     }
 
