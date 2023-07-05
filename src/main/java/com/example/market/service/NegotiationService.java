@@ -60,7 +60,7 @@ public class NegotiationService {
         // 등록한 사용자
         Page<Negotiation> negotiationPage = negotiationRepository.findByItemIdAndWriterAndPassword(pageable, itemId, writer, password);
         if (negotiationPage.isEmpty()) {
-            // * exception
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         Page<NegotiationResponseDTO> negoDtoPage = negotiationPage.map(NegotiationResponseDTO::fromEntity);
         return negoDtoPage;
@@ -93,7 +93,7 @@ public class NegotiationService {
         }
 
         if (!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
-            // * exception
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         negotiation.setSuggestedPrice(negotiationDTO.getSuggestedPrice());
@@ -124,7 +124,7 @@ public class NegotiationService {
         if (status.equals("수락") || status.equals("거절")) {
             // writer와 password가 물품 등록할 때의 값과 일치하지 않을 경우 실패
             if (!negotiationDTO.getWriter().equals(salesItem.getWriter()) || !negotiationDTO.getPassword().equals(salesItem.getPassword())) {
-                // * exception
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
             negotiation.setStatus(status);
             negotiationRepository.save(negotiation);
@@ -134,11 +134,11 @@ public class NegotiationService {
         if (status.equals("확정")) {
             // writer 와 password 가 제안 등록할 때의 값과 일치하지 않을 경우 실패
             if (!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
-                // * exception
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
             // 제안의 상태가 수락이 아닐 경우 실패
             if (!negotiation.getStatus().equals("수락")) {
-                // * exception
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
             }
 
             // 구매확정
@@ -176,7 +176,7 @@ public class NegotiationService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         if (!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
-            // * exception
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         negotiationRepository.deleteById(proposalId);

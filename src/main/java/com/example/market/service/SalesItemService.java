@@ -54,8 +54,7 @@ public class SalesItemService {
     public ItemResponseDTO readItem(Long id) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if (optionalItem.isEmpty()) {
-            // * exception
-            log.error("get 일치하는 id 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         return ItemResponseDTO.fromEntity(optionalItem.get());
     }
@@ -64,16 +63,13 @@ public class SalesItemService {
     public void updateItem(Long id, SalesItemDTO salesItemDTO) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if (optionalItem.isEmpty()) {
-            // * exception
-            log.error("update 일치하는 id 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         SalesItem salesItem = optionalItem.get();
 
-        // password 맞게 입력했는지 확인
         if (!salesItem.getPassword().equals(salesItemDTO.getPassword())) {
-            // * exception
-            log.error("update 비밀번호 불일치");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         salesItem.setTitle(salesItemDTO.getTitle());
@@ -84,19 +80,15 @@ public class SalesItemService {
     }
 
     public void updateImage(Long id, MultipartFile multipartFile, String writer, String password) throws IOException {
-        // 유저 정보 확인
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if(optionalItem.isEmpty()) {
-            // * exception
-            log.error("update image 일치하는 id 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         SalesItem salesItem = optionalItem.get();
 
-        // password 맞게 입력했는지 확인
         if (!salesItem.getPassword().equals(password)) {
-            // * exception
-            log.error("update image 비밀번호 불일치");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         // 저장 경로 생성
@@ -119,7 +111,7 @@ public class SalesItemService {
         SalesItem salesItem = optionalItem.get();
 
         if(!salesItem.getPassword().equals(salesItemDTO.getPassword())) {
-            // * exception
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         salesItemRepository.deleteById(id);

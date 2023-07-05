@@ -62,7 +62,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         if(!commentDTO.getPassword().equals(comment.getPassword())) {
-            // * exception
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         comment.setContent(commentDTO.getContent());
@@ -80,8 +80,6 @@ public class CommentService {
         SalesItem salesItem = optionalItem.get();
 
         if(!salesItem.getWriter().equals(commentDTO.getWriter()) || !salesItem.getPassword().equals(commentDTO.getPassword())) {
-            // * exception
-            log.error("안됨안됨");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -107,7 +105,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         if(!commentDTO.getPassword().equals(comment.getPassword())) {
-            // * exception
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         commentRepository.deleteById(commentId);
