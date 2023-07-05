@@ -28,12 +28,12 @@ public class NegotiationController {
     }
 
     @PutMapping("/{proposalId}")
-    public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationDTO negotiationDTO) {
+    public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
         return new ResponseDTO(negotiationService.updateNego(itemId, proposalId, negotiationDTO));
     }
 
     @DeleteMapping("/{proposalId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationDTO negotiationDTO) {
+    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
         negotiationService.deleteNego(itemId, proposalId, negotiationDTO);
         return new ResponseDTO("제안을 삭제했습니다.");
     }

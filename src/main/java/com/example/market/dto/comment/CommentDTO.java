@@ -6,8 +6,6 @@ import lombok.Getter;
 @Getter
 public class CommentDTO {
 
-    private Long item_id;
-
     @NotBlank
     private String writer;
 

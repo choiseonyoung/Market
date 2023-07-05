@@ -22,7 +22,7 @@ public class SalesItemController {
     private final SalesItemService salesItemService;
 
     @PostMapping
-    public ResponseDTO create(@Valid @RequestBody SalesItemDTO salesItemDTO) {
+    public ResponseDTO create(@RequestBody @Valid SalesItemDTO salesItemDTO) {
         salesItemService.saveItem(salesItemDTO);
         return new ResponseDTO("등록이 완료되었습니다.");
     }
