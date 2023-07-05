@@ -2,7 +2,6 @@ package com.example.market.service;
 
 import com.example.market.dto.negotiation.NegotiationDTO;
 import com.example.market.dto.negotiation.NegotiationResponseDTO;
-import com.example.market.dto.negotiation.NegotiationStatusDTO;
 import com.example.market.entity.Negotiation;
 import com.example.market.entity.SalesItem;
 import com.example.market.repository.NegotiationRepository;
@@ -14,9 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,7 +25,6 @@ public class NegotiationService {
     private final NegotiationRepository negotiationRepository;
     private final SalesItemRepository salesItemRepository;
 
-    @Transactional
     public void createNego(Long itemId, NegotiationDTO negotiationDTO) {
         if (!salesItemRepository.existsById(itemId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -42,7 +40,6 @@ public class NegotiationService {
         negotiationRepository.save(negotiation);
     }
 
-    @Transactional
     public Page<NegotiationResponseDTO> readNego(Long itemId, String writer, String password, Integer pageNumber) {
 
         Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
@@ -70,68 +67,118 @@ public class NegotiationService {
 
     }
 
-    @Transactional
-    public void updateNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
+    public String updateNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
+
+        // status==null -> 등록된 제안 수정 (제안자)
+        if (negotiationDTO.getStatus() == null) {
+            return updateNegoPrice(itemId, proposalId, negotiationDTO);
+        } else {
+            // status==수락 || status==거절 -> 구매 제안 수락, 거절 (판매자)
+            // status==확정 -> 구매 확정 (제안자)
+            return updateNegoStatus(itemId, proposalId, negotiationDTO);
+        }
+
+    }
+
+    public String updateNegoPrice(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
         Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
-        if(optionalNegotiation.isEmpty()) {
+        if (optionalNegotiation.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         Negotiation negotiation = optionalNegotiation.get();
 
-        if(!itemId.equals(negotiation.getItemId())) {
+        if (!itemId.equals(negotiation.getItemId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
+
+        if (!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
             // * exception
         }
 
         negotiation.setSuggestedPrice(negotiationDTO.getSuggestedPrice());
 
         negotiationRepository.save(negotiation);
+
+        return "제안이 수정되었습니다.";
     }
 
-    @Transactional
-    public void deleteNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
+
+    public String updateNegoStatus(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
         Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
-        if(optionalNegotiation.isEmpty()) {
+        if (optionalNegotiation.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
         Negotiation negotiation = optionalNegotiation.get();
 
-        if(!itemId.equals(negotiation.getItemId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
-        if(!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
-            // * exception
-        }
-
-        negotiationRepository.deleteById(proposalId);
-    }
-
-    @Transactional
-    public void updateProposal(Long itemId, Long proposalId, NegotiationStatusDTO negotiationStatusDTO) {
-        Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
-        if(optionalNegotiation.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        Negotiation negotiation = optionalNegotiation.get();
-
-        if(!itemId.equals(negotiation.getItemId())) {
+        if (!itemId.equals(negotiation.getItemId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
         Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
         SalesItem salesItem = optionalSalesItem.get();
 
-        if(!negotiationStatusDTO.getWriter().equals(salesItem.getWriter()) || !negotiationStatusDTO.getPassword().equals(salesItem.getPassword())) {
+
+        String status = negotiationDTO.getStatus();
+        // 구매 제안 상태 변경 (판매자)
+        if (status.equals("수락") || status.equals("거절")) {
+            // writer와 password가 물품 등록할 때의 값과 일치하지 않을 경우 실패
+            if (!negotiationDTO.getWriter().equals(salesItem.getWriter()) || !negotiationDTO.getPassword().equals(salesItem.getPassword())) {
+                // * exception
+            }
+            negotiation.setStatus(status);
+            negotiationRepository.save(negotiation);
+            return "제안의 상태가 변경되었습니다.";
+        }
+        // 구매 확정 (구매 제안자)
+        if (status.equals("확정")) {
+            // writer 와 password 가 제안 등록할 때의 값과 일치하지 않을 경우 실패
+            if (!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
+                // * exception
+            }
+            // 제안의 상태가 수락이 아닐 경우 실패
+            if (!negotiation.getStatus().equals("수락")) {
+                // * exception
+            }
+
+            // 구매확정
+            negotiation.setStatus("확정");
+
+            // 구매제안확정 -> SalesItem의 status "판매 완료"
+            salesItem.setStatus("판매 완료");
+
+            // 구매제안확정 -> 확정되지 않은 다른 Negotiation의 status "거절"
+            List<Negotiation> negoList = negotiationRepository.findByItemId(itemId);
+            for (Negotiation nego : negoList) {
+                if (!nego.getStatus().equals("확정")) {
+                    nego.setStatus("거절");
+                    negotiationRepository.save(nego);
+                }
+            }
+            return  "구매가 확정되었습니다.";
+        }
+
+
+        negotiation.setStatus(negotiationDTO.getStatus());
+        negotiationRepository.save(negotiation);
+        return "제안의 상태가 변경되었습니다.";
+    }
+
+    public void deleteNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO) {
+        Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
+        if (optionalNegotiation.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        Negotiation negotiation = optionalNegotiation.get();
+
+        if (!itemId.equals(negotiation.getItemId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+        if (!negotiationDTO.getWriter().equals(negotiation.getWriter()) || !negotiationDTO.getPassword().equals(negotiation.getPassword())) {
             // * exception
         }
 
-        negotiation.setStatus(negotiationStatusDTO.getStatus());
-
-        negotiationRepository.save(negotiation);
+        negotiationRepository.deleteById(proposalId);
     }
 }

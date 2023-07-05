@@ -3,7 +3,6 @@ package com.example.market.controller;
 import com.example.market.dto.negotiation.NegotiationDTO;
 import com.example.market.dto.negotiation.NegotiationResponseDTO;
 import com.example.market.dto.ResponseDTO;
-import com.example.market.dto.negotiation.NegotiationStatusDTO;
 import com.example.market.service.NegotiationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,8 +19,7 @@ public class NegotiationController {
     @PostMapping
     public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
         negotiationService.createNego(itemId, negotiationDTO);
-        ResponseDTO responseDTO = new ResponseDTO("구매 제안이 등록되었습니다.");
-        return responseDTO;
+        return new ResponseDTO("구매 제안이 등록되었습니다.");
     }
 
     @GetMapping
@@ -31,23 +29,13 @@ public class NegotiationController {
 
     @PutMapping("/{proposalId}")
     public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationDTO negotiationDTO) {
-        negotiationService.updateNego(itemId, proposalId, negotiationDTO);
-        ResponseDTO responseDTO = new ResponseDTO("제안이 수정되었습니다.");
-        return responseDTO;
-    }
-
-    @PutMapping("/{proposalId}")
-    public ResponseDTO updateProposal(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationStatusDTO negotiationStatusDTO) {
-        negotiationService.updateProposal(itemId, proposalId, negotiationStatusDTO);
-        ResponseDTO responseDTO = new ResponseDTO("제안의 상태가 변경되었습니다.");
-        return responseDTO;
+        return new ResponseDTO(negotiationService.updateNego(itemId, proposalId, negotiationDTO));
     }
 
     @DeleteMapping("/{proposalId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, NegotiationDTO negotiationDTO) {
+    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody NegotiationDTO negotiationDTO) {
         negotiationService.deleteNego(itemId, proposalId, negotiationDTO);
-        ResponseDTO responseDTO = new ResponseDTO("제안을 삭제했습니다.");
-        return responseDTO;
+        return new ResponseDTO("제안을 삭제했습니다.");
     }
 
 }

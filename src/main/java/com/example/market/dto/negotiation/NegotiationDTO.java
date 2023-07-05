@@ -8,13 +8,14 @@ import lombok.Getter;
 @Getter
 public class NegotiationDTO {
 
-    @NotNull
-    private Integer suggestedPrice;
-
     @NotBlank
     private String writer;
 
     @NotBlank
     private String password;
+
+    private Integer suggestedPrice;
+
+    private String status;
 
 }
