@@ -21,11 +21,10 @@ public class SalesItemController {
 
     private final SalesItemService salesItemService;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseDTO create(@Valid @RequestBody SalesItemDTO salesItemDTO) {
         salesItemService.saveItem(salesItemDTO);
-        ResponseDTO responseDTO = new ResponseDTO("등록이 완료되었습니다.");
-        return responseDTO;
+        return new ResponseDTO("등록이 완료되었습니다.");
     }
 
     @GetMapping
@@ -41,24 +40,20 @@ public class SalesItemController {
     @PutMapping("/{itemId}")
     public ResponseDTO update(@PathVariable("itemId") Long id, @RequestBody @Valid SalesItemDTO salesItemDTO) {
         salesItemService.updateItem(id, salesItemDTO);
-        ResponseDTO responseDTO = new ResponseDTO("물품이 수정되었습니다.");
-        return responseDTO;
+        return new ResponseDTO("물품이 수정되었습니다.");
     }
 
     @PutMapping(value = "/{itemId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseDTO updateImage(@PathVariable("itemId") Long id, @RequestParam("image") MultipartFile multipartFile, @RequestParam("writer") String writer, @RequestParam("password") String password) throws IOException {
         salesItemService.updateImage(id, multipartFile, writer, password);
 
-        ResponseDTO responseDTO = new ResponseDTO("이미지가 등록되었습니다.");
-
-        return responseDTO;
+        return new ResponseDTO("이미지가 등록되었습니다.");
     }
 
     @DeleteMapping("/{itemId}")
     public ResponseDTO delete(@PathVariable("itemId") Long id, SalesItemDTO salesItemDTO) {
         salesItemService.deleteItem(id, salesItemDTO);
-        ResponseDTO responseDTO = new ResponseDTO("물품을 삭제했습니다.");
-        return responseDTO;
+        return new ResponseDTO("물품을 삭제했습니다.");
     }
 
 }

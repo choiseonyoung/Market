@@ -21,8 +21,7 @@ public class CommentController {
     @PostMapping
     public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid CommentDTO commentDTO) {
         commentService.createComment(itemId, commentDTO);
-        ResponseDTO responseDTO = new ResponseDTO("댓글이 등록되었습니다.");
-        return responseDTO;
+        return new ResponseDTO("댓글이 등록되었습니다.");
     }
 
     @GetMapping
@@ -33,24 +32,19 @@ public class CommentController {
     @PutMapping("/{commentId}")
     public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentDTO commentDTO) {
         commentService.updateComment(itemId, commentId, commentDTO);
-        ResponseDTO responseDTO = new ResponseDTO("댓글이 수정되었습니다.");
-        return responseDTO;
+        return new ResponseDTO("댓글이 수정되었습니다.");
     }
 
     @PutMapping("/{commentId}/reply")
     public ResponseDTO updateReply(@PathVariable("itemId") Long itemId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentDTO commentDTO) {
-
         commentService.updateReply(itemId, commentId, commentDTO);
-
-        ResponseDTO responseDTO = new ResponseDTO("댓글에 답변이 추가되었습니다.");
-        return responseDTO;
+        return new ResponseDTO("댓글에 답변이 추가되었습니다.");
     }
 
     @DeleteMapping("/{commentId}")
     public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("commentId") Long commentId, @RequestBody @Valid CommentDTO commentDTO) {
         commentService.deleteComment(itemId, commentId, commentDTO);
-        ResponseDTO responseDTO = new ResponseDTO("댓글을 삭제했습니다.");
-        return responseDTO;
+        return new ResponseDTO("댓글을 삭제했습니다.");
     }
 
 }
