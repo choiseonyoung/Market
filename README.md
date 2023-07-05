@@ -100,21 +100,20 @@
     ```json
     {
         "content": [
-              {
-                "id": 1,
-                "title": "중고 맥북 팝니다",
-                "description": "2019년 맥북 프로 13인치 모델입니다",
-                "minPriceWanted": 1000000,
-                "status": "판매중"
-            },
-              {
-                "id": 2,
+          {
                 "title": "콜드브루 드립기 팝니다",
                 "description": "ㅈㄱㄴ",
                 "minPriceWanted": 20000,
                 "imageUrl": "images\\0f7f8941-72fb-40e3-84a4-2c492d53accb.jpg",
                 "status": "판매완료"
             },
+              {
+                "title": "중고 맥북 팝니다",
+                "description": "2019년 맥북 프로 13인치 모델입니다",
+                "minPriceWanted": 1000000,
+                "imageUrl": null,
+                "status": "판매중"
+            }, 
             // ...
         ],
         "totalPages": 4,
