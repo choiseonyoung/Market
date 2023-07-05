@@ -61,7 +61,7 @@ public class CommentService {
         if(!itemId.equals(comment.getItemId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(!commentDTO.getPassword().equals(comment.getPassword())) {
+        if(!commentDTO.getWriter().equals(comment.getWriter()) || !commentDTO.getPassword().equals(comment.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -104,7 +104,7 @@ public class CommentService {
         if(!itemId.equals(comment.getItemId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
-        if(!commentDTO.getPassword().equals(comment.getPassword())) {
+        if(!commentDTO.getWriter().equals(comment.getWriter()) || !commentDTO.getPassword().equals(comment.getPassword())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 

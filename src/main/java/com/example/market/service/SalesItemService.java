@@ -68,7 +68,7 @@ public class SalesItemService {
 
         SalesItem salesItem = optionalItem.get();
 
-        if (!salesItem.getPassword().equals(salesItemDTO.getPassword())) {
+        if (!salesItem.getWriter().equals(salesItemDTO.getWriter()) || !salesItem.getPassword().equals(salesItemDTO.getPassword())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
@@ -87,7 +87,7 @@ public class SalesItemService {
 
         SalesItem salesItem = optionalItem.get();
 
-        if (!salesItem.getPassword().equals(password)) {
+        if (!salesItem.getWriter().equals(writer) || !salesItem.getPassword().equals(password)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
 
@@ -110,7 +110,7 @@ public class SalesItemService {
 
         SalesItem salesItem = optionalItem.get();
 
-        if(!salesItem.getPassword().equals(salesItemDTO.getPassword())) {
+        if(!salesItem.getWriter().equals(salesItemDTO.getWriter()) || !salesItem.getPassword().equals(salesItemDTO.getPassword())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
