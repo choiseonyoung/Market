@@ -1,12 +1,17 @@
 package com.example.market.controller;
 
-import com.example.market.entity.CustomUserDetails;
-import jakarta.persistence.PreUpdate;
+import com.example.market.dto.user.UserSignupDTO;
+import com.example.market.dto.user.UserLoginDTO;
+import com.example.market.dto.user.JwtTokenDTO;
+import com.example.market.util.JwtTokenUtil;
+import com.example.market.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestController
@@ -15,11 +20,16 @@ public class UserController {
 
     private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenUtil jwtTokenUtil;
+
+    private final UserService userService;
 
 
-    public UserController(PasswordEncoder passwordEncoder, UserDetailsManager manager) {
+    public UserController(PasswordEncoder passwordEncoder, UserDetailsManager manager, JwtTokenUtil jwtTokenUtil, UserService userService) {
         this.passwordEncoder = passwordEncoder;
         this.userDetailsManager = manager;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.userService = userService;
     }
 
     @GetMapping("/signup")
@@ -28,18 +38,9 @@ public class UserController {
     }
 
     @PostMapping("/signup")
-    public String signUpRequest(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("password-check") String passwordCheck) {
-        if (password.equals(passwordCheck)) {
-            log.info("패스워드가 일치합니다!");
-
-            userDetailsManager.createUser(CustomUserDetails.builder()
-                    .username(username)
-                    .password(passwordEncoder.encode(password))
-                    .build());
-            return "회원가입 성공";
-        }
-        log.warn("패스워드 불일치");
-        return "회원가입 실패";
+    public String signUpRequest(@RequestBody UserSignupDTO dto) {
+        userService.signUp(dto);
+        return "회원가입 성공";
     }
 
     @GetMapping("/login")
@@ -47,5 +48,12 @@ public class UserController {
         return "로그인 page";
     }
 
+    @PostMapping("/login")
+    public JwtTokenDTO loginPost(@RequestBody UserLoginDTO dto) {
+        UserDetails userDetails = userService.loginPost(dto);
+        JwtTokenDTO jwtTokenDTO = new JwtTokenDTO();
+        jwtTokenDTO.setToken(jwtTokenUtil.generateToken(userDetails));
+        return jwtTokenDTO;
+    }
 
 }

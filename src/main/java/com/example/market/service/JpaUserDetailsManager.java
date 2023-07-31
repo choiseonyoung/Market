@@ -21,11 +21,11 @@ public class JpaUserDetailsManager implements UserDetailsManager {
     public JpaUserDetailsManager(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
 
-        // 테스트용 user
-        createUser(CustomUserDetails.builder()
-                .username("user")
-                .password(passwordEncoder.encode("1234"))
-                .build());
+//        // 테스트용 user
+//        createUser(CustomUserDetails.builder()
+//                .username("user")
+//                .password(passwordEncoder.encode("1234"))
+//                .build());
     }
 
     @Override

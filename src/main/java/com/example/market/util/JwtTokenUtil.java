@@ -1,4 +1,4 @@
-package com.example.market.jwt;
+package com.example.market.util;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -11,13 +11,12 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.sql.Date;
 import java.time.Instant;
-import java.util.Base64;
 
 @Component
-public class JwtTokenUtils {
+public class JwtTokenUtil {
     private final Key key;
 
-    public JwtTokenUtils(@Value("${jwt.secret}") String jwtSecret) {
+    public JwtTokenUtil(@Value("${jwt.secret}") String jwtSecret) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
