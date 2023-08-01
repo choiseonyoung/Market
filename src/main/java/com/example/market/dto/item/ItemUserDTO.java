@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 public class ItemUserDTO {
 
-    @NotBlank
     private String writer;
 
-    @NotBlank
     private String password;
 
 }

@@ -18,10 +18,8 @@ public class SalesItemDTO {
     @NotNull
     private Integer minPriceWanted;
 
-    @NotBlank
     private String writer;
 
-    @NotBlank
     private String password;
 
 }

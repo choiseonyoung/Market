@@ -6,10 +6,8 @@ import lombok.Getter;
 @Getter
 public class CommentDTO {
 
-    @NotBlank
     private String writer;
 
-    @NotBlank
     private String password;
 
     private String content;
