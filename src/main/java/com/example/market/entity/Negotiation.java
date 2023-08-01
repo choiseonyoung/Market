@@ -1,9 +1,6 @@
 package com.example.market.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -28,5 +25,13 @@ public class Negotiation {
     private String writer;
 
     private String password;
+
+    @ManyToOne
+    private SalesItem salesItem;
+
+    // 제안자
+    @ManyToOne
+    private User user;
+
 
 }
