@@ -7,6 +7,7 @@ import com.example.market.service.NegotiationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -17,24 +18,24 @@ public class NegotiationController {
     private final NegotiationService negotiationService;
 
     @PostMapping
-    public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
-        negotiationService.saveNego(itemId, negotiationDTO);
+    public ResponseDTO create(@PathVariable("itemId") Long itemId, @RequestBody @Valid NegotiationDTO negotiationDTO, Authentication authentication) {
+        negotiationService.saveNego(itemId, negotiationDTO, authentication.getName());
         return new ResponseDTO("구매 제안이 등록되었습니다.");
     }
 
     @GetMapping
-    public Page<NegotiationResponseDTO> read(@PathVariable("itemId") Long itemId, @RequestParam("writer") String writer, @RequestParam("password") String password, @RequestParam("page") Integer pageNumber) {
-        return negotiationService.readNego(itemId, writer, password, pageNumber);
+    public Page<NegotiationResponseDTO> read(@PathVariable("itemId") Long itemId, @RequestParam("page") Integer pageNumber, Authentication authentication) {
+        return negotiationService.readNego(itemId, pageNumber, authentication.getName());
     }
 
     @PutMapping("/{proposalId}")
-    public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
-        return new ResponseDTO(negotiationService.updateNego(itemId, proposalId, negotiationDTO));
+    public ResponseDTO update(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody @Valid NegotiationDTO negotiationDTO, Authentication authentication) {
+        return new ResponseDTO(negotiationService.updateNego(itemId, proposalId, negotiationDTO, authentication.getName()));
     }
 
     @DeleteMapping("/{proposalId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody @Valid NegotiationDTO negotiationDTO) {
-        negotiationService.deleteNego(itemId, proposalId, negotiationDTO);
+    public ResponseDTO delete(@PathVariable("itemId") Long itemId, @PathVariable("proposalId") Long proposalId, @RequestBody @Valid NegotiationDTO negotiationDTO, Authentication authentication) {
+        negotiationService.deleteNego(itemId, proposalId, negotiationDTO, authentication.getName());
         return new ResponseDTO("제안을 삭제했습니다.");
     }
 

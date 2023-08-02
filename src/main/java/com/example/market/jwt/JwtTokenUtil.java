@@ -50,7 +50,7 @@ public class JwtTokenUtil {
         Claims jwtClaims = Jwts.claims()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
-                .setExpiration(Date.from(Instant.now().plusSeconds(100)));
+                .setExpiration(Date.from(Instant.now().plusSeconds(600)));
 
         return Jwts.builder()
                 .setClaims(jwtClaims)

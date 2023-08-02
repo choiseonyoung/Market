@@ -3,15 +3,13 @@ package com.example.market.controller;
 import com.example.market.dto.user.UserSignupDTO;
 import com.example.market.dto.user.UserLoginDTO;
 import com.example.market.dto.user.JwtTokenDTO;
-import com.example.market.util.JwtTokenUtil;
+import com.example.market.jwt.JwtTokenUtil;
 import com.example.market.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
 @RestController

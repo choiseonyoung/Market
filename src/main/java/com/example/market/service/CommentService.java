@@ -4,8 +4,10 @@ import com.example.market.dto.comment.CommentDTO;
 import com.example.market.dto.comment.CommentResponseDTO;
 import com.example.market.entity.Comment;
 import com.example.market.entity.SalesItem;
+import com.example.market.entity.User;
 import com.example.market.repository.CommentRepository;
 import com.example.market.repository.SalesItemRepository;
+import com.example.market.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -25,44 +27,45 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final SalesItemRepository salesItemRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public void saveComment(Long itemId, CommentDTO commentDTO) {
-        if(!salesItemRepository.existsById(itemId)) {
-            log.error("에러");
+    public void saveComment(Long itemId, CommentDTO commentDTO, String username) {
+        Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
+        if (optionalSalesItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        Comment comment = Comment.builder()
-                .itemId(itemId)
-                .writer(commentDTO.getWriter())
-                .password(commentDTO.getPassword())
-                .content(commentDTO.getContent()).build();
 
-        commentRepository.save(comment);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        commentRepository.save(commentDTO.toEntity(optionalSalesItem.get(), optionalUser.get()));
     }
 
     @Transactional
     public Page<CommentResponseDTO> readAllComment(Long itemId, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
-        Page<Comment> commentPage = commentRepository.findAllByItemId(pageable, itemId);
+        Page<Comment> commentPage = commentRepository.findAllBySalesItemId(pageable, itemId);
         Page<CommentResponseDTO> commentResponseDTOPage = commentPage.map(CommentResponseDTO::fromEntity);
         return commentResponseDTOPage;
     }
 
     @Transactional
-    public void updateComment(Long itemId, Long commentId, CommentDTO commentDTO) {
+    public void updateComment(Long itemId, Long commentId, CommentDTO commentDTO, String username) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if(optionalComment.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
         Comment comment = optionalComment.get();
 
-        if(!itemId.equals(comment.getItemId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if(!commentDTO.getWriter().equals(comment.getWriter()) || !commentDTO.getPassword().equals(comment.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        if (!comment.getUser().getId().equals(optionalUser.get().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         comment.setContent(commentDTO.getContent());
@@ -71,41 +74,51 @@ public class CommentService {
     }
 
     @Transactional
-    public void updateReply(Long itemId, Long commentId, CommentDTO commentDTO) {
+    public void updateReply(Long itemId, Long commentId, CommentDTO commentDTO, String username) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(itemId);
         if(optionalItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
         SalesItem salesItem = optionalItem.get();
-
-        if(!salesItem.getWriter().equals(commentDTO.getWriter()) || !salesItem.getPassword().equals(commentDTO.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        }
 
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if(optionalComment.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        // 답글 작성자와 판매자가 일치하는지 확인
+        if(!salesItem.getUser().getId().equals(optionalUser.get().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
         Comment comment = optionalComment.get();
         comment.setReply(commentDTO.getReply());
         commentRepository.save(comment);
     }
 
     @Transactional
-    public void deleteComment(Long itemId, Long commentId, CommentDTO commentDTO) {
+    public void deleteComment(Long itemId, Long commentId, String username) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
         if(optionalComment.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-
         Comment comment = optionalComment.get();
 
-        if(!itemId.equals(comment.getItemId())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
+        if(optionalSalesItem.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
-        if(!commentDTO.getWriter().equals(comment.getWriter()) || !commentDTO.getPassword().equals(comment.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        if (optionalUser.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+        if (!comment.getUser().getId().equals(optionalUser.get().getId())) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
 
         commentRepository.deleteById(commentId);

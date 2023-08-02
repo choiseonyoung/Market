@@ -3,6 +3,7 @@ package com.example.market.config;
 import com.example.market.jwt.JwtTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,7 +27,9 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/user/login", "/user/signup").permitAll()
+                                .requestMatchers("/user/login", "/user/signup").anonymous()
+                                .requestMatchers(HttpMethod.GET, "/items/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/items/{itemId}/proposals").authenticated()
                                 .anyRequest().authenticated()
 
                 )

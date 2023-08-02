@@ -15,11 +15,9 @@ public class Negotiation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long itemId;
-
     private Integer suggestedPrice;
 
-    // 수락, 거절, 확정
+    // 제안, 수락, 거절, 확정
     private String status;
 
     private String writer;

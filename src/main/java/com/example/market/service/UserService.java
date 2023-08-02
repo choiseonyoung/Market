@@ -1,11 +1,9 @@
 package com.example.market.service;
 
-import com.example.market.dto.user.JwtTokenDTO;
 import com.example.market.dto.user.UserLoginDTO;
 import com.example.market.dto.user.UserSignupDTO;
 import com.example.market.entity.CustomUserDetails;
 import com.example.market.repository.UserRepository;
-import com.example.market.util.JwtTokenUtil;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;

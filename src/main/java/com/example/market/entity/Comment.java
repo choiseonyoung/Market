@@ -15,8 +15,6 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long itemId;
-
     private String writer;
 
     private String password;

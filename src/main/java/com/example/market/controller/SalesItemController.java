@@ -2,19 +2,21 @@ package com.example.market.controller;
 
 import com.example.market.dto.item.ItemResponseDTO;
 import com.example.market.dto.ResponseDTO;
-import com.example.market.dto.item.ItemUserDTO;
 import com.example.market.dto.item.SalesItemDTO;
 import com.example.market.service.SalesItemService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
 
+@Slf4j
 @RestController
 @RequestMapping("/items")
 @RequiredArgsConstructor
@@ -23,8 +25,8 @@ public class SalesItemController {
     private final SalesItemService salesItemService;
 
     @PostMapping
-    public ResponseDTO create(@RequestBody @Valid SalesItemDTO salesItemDTO) {
-        salesItemService.saveItem(salesItemDTO);
+    public ResponseDTO create(@RequestBody @Valid SalesItemDTO salesItemDTO, Authentication authentication) {
+        salesItemService.saveItem(salesItemDTO, authentication.getName());
         return new ResponseDTO("등록이 완료되었습니다.");
     }
 
@@ -39,21 +41,21 @@ public class SalesItemController {
     }
 
     @PutMapping("/{itemId}")
-    public ResponseDTO update(@PathVariable("itemId") Long id, @RequestBody @Valid SalesItemDTO salesItemDTO) {
-        salesItemService.updateItem(id, salesItemDTO);
+    public ResponseDTO update(@PathVariable("itemId") Long id, @RequestBody @Valid SalesItemDTO salesItemDTO, Authentication authentication) {
+        salesItemService.updateItem(id, salesItemDTO, authentication.getName());
         return new ResponseDTO("물품이 수정되었습니다.");
     }
 
     @PutMapping(value = "/{itemId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseDTO updateImage(@PathVariable("itemId") Long id, @RequestParam("image") MultipartFile multipartFile, @RequestParam("writer") String writer, @RequestParam("password") String password) throws IOException {
-        salesItemService.updateImage(id, multipartFile, writer, password);
+    public ResponseDTO updateImage(@PathVariable("itemId") Long id, @RequestParam("image") MultipartFile multipartFile, Authentication authentication) throws IOException {
+        salesItemService.updateItemImage(id, multipartFile, authentication.getName());
 
         return new ResponseDTO("이미지가 등록되었습니다.");
     }
 
     @DeleteMapping("/{itemId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long id, @RequestBody @Valid ItemUserDTO itemUserDTO) {
-        salesItemService.deleteItem(id, itemUserDTO);
+    public ResponseDTO delete(@PathVariable("itemId") Long id, Authentication authentication) {
+        salesItemService.deleteItem(id, authentication.getName());
         return new ResponseDTO("물품을 삭제했습니다.");
     }
 
