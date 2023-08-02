@@ -72,7 +72,7 @@ public class SalesItemService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!salesItem.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         salesItem.setTitle(salesItemDTO.getTitle());
@@ -94,7 +94,7 @@ public class SalesItemService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!salesItem.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         // 저장 경로 생성
@@ -120,7 +120,7 @@ public class SalesItemService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!salesItem.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         salesItemRepository.deleteById(id);

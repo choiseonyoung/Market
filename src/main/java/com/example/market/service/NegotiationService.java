@@ -91,7 +91,7 @@ public class NegotiationService {
         // status==null -> 등록된 제안 수정 (제안자)
         if (negotiationDTO.getStatus() == null) {
             if(!user.getId().equals(negotiation.getUser().getId())) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN);
             }
             negotiation.setSuggestedPrice(negotiationDTO.getSuggestedPrice());
             negotiationRepository.save(negotiation);
@@ -109,7 +109,7 @@ public class NegotiationService {
             if (status.equals("수락") || status.equals("거절")) {
                 // writer와 password가 물품 등록할 때의 값과 일치하지 않을 경우 실패
                 if(!salesItem.getUser().getId().equals(user.getId())) {
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
                 negotiation.setStatus(status);
                 negotiationRepository.save(negotiation);
@@ -124,7 +124,7 @@ public class NegotiationService {
                 }
                 // writer 와 password 가 제안 등록할 때의 값과 일치하지 않을 경우 실패
                 if (!negotiation.getUser().getId().equals(user.getId())) {
-                    throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+                    throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
                 // 구매 확정
                 negotiation.setStatus("확정");
@@ -167,7 +167,7 @@ public class NegotiationService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!negotiation.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         negotiationRepository.deleteById(proposalId);

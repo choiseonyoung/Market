@@ -65,7 +65,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!comment.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         comment.setContent(commentDTO.getContent());
@@ -92,7 +92,7 @@ public class CommentService {
         }
         // 답글 작성자와 판매자가 일치하는지 확인
         if(!salesItem.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         Comment comment = optionalComment.get();
@@ -118,7 +118,7 @@ public class CommentService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         if (!comment.getUser().getId().equals(optionalUser.get().getId())) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
 
         commentRepository.deleteById(commentId);
