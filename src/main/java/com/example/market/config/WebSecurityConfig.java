@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         auth -> auth
-                                .requestMatchers("/user/login", "/user/signup").anonymous()
+                                .requestMatchers("/users/login", "/users/signup").anonymous()
                                 .requestMatchers(HttpMethod.GET, "/items/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/items/{itemId}/proposals").authenticated()
                                 .anyRequest().authenticated()
