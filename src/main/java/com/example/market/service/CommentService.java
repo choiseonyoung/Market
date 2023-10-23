@@ -29,8 +29,9 @@ public class CommentService {
     private final SalesItemRepository salesItemRepository;
     private final UserRepository userRepository;
 
+    // 댓글 등록
     @Transactional
-    public void saveComment(Long itemId, CommentDTO commentDTO, String username) {
+    public void createComment(Long itemId, CommentDTO commentDTO, String username) {
         Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
         if (optionalSalesItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -44,6 +45,7 @@ public class CommentService {
         commentRepository.save(commentDTO.toEntity(optionalSalesItem.get(), optionalUser.get()));
     }
 
+    // 댓글 목록 조회
     @Transactional
     public Page<CommentResponseDTO> readAllComment(Long itemId, Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -52,6 +54,7 @@ public class CommentService {
         return commentResponseDTOPage;
     }
 
+    // 댓글 수정
     @Transactional
     public void updateComment(Long itemId, Long commentId, CommentDTO commentDTO, String username) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);
@@ -73,6 +76,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    // 답글 수정
     @Transactional
     public void updateReply(Long itemId, Long commentId, CommentDTO commentDTO, String username) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(itemId);
@@ -100,6 +104,7 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    // 댓글 삭제
     @Transactional
     public void deleteComment(Long itemId, Long commentId, String username) {
         Optional<Comment> optionalComment = commentRepository.findById(commentId);

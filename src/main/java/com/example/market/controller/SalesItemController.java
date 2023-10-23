@@ -24,38 +24,44 @@ public class SalesItemController {
 
     private final SalesItemService salesItemService;
 
+    // 중고 물품 등록
     @PostMapping
-    public ResponseDTO create(@RequestBody @Valid SalesItemDTO salesItemDTO, Authentication authentication) {
-        salesItemService.saveItem(salesItemDTO, authentication.getName());
+    public ResponseDTO createSalesItem(@RequestBody @Valid SalesItemDTO salesItemDTO, Authentication authentication) {
+        salesItemService.createSalesItem(salesItemDTO, authentication.getName());
         return new ResponseDTO("등록이 완료되었습니다.");
     }
 
+    // 중고 물품 목록 조회
     @GetMapping
-    public Page<ItemResponseDTO> readAll(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "0") Integer limit) {
-        return salesItemService.readAllItem(page, limit);
+    public Page<ItemResponseDTO> readAllSalesItem(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "0") Integer limit) {
+        return salesItemService.readAllSalesItem(page, limit);
     }
 
+    // 해당 중고 물품 조회
     @GetMapping("/{itemId}")
-    public ItemResponseDTO read(@PathVariable("itemId") Long id) {
-        return salesItemService.readItem(id);
+    public ItemResponseDTO readSalesItem(@PathVariable("itemId") Long id) {
+        return salesItemService.readSalesItem(id);
     }
 
+    // 중고 물품 수정
     @PutMapping("/{itemId}")
-    public ResponseDTO update(@PathVariable("itemId") Long id, @RequestBody @Valid SalesItemDTO salesItemDTO, Authentication authentication) {
-        salesItemService.updateItem(id, salesItemDTO, authentication.getName());
+    public ResponseDTO updateSalesItem(@PathVariable("itemId") Long id, @RequestBody @Valid SalesItemDTO salesItemDTO, Authentication authentication) {
+        salesItemService.updateSalesItem(id, salesItemDTO, authentication.getName());
         return new ResponseDTO("물품이 수정되었습니다.");
     }
 
+    // 중고 물품 이미지 등록
     @PutMapping(value = "/{itemId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseDTO updateImage(@PathVariable("itemId") Long id, @RequestParam("image") MultipartFile multipartFile, Authentication authentication) throws IOException {
-        salesItemService.updateItemImage(id, multipartFile, authentication.getName());
+    public ResponseDTO updateSalesItemImage(@PathVariable("itemId") Long id, @RequestParam("image") MultipartFile multipartFile, Authentication authentication) throws IOException {
+        salesItemService.updateSalesItemImage(id, multipartFile, authentication.getName());
 
         return new ResponseDTO("이미지가 등록되었습니다.");
     }
 
+    // 중고 물품 삭제
     @DeleteMapping("/{itemId}")
-    public ResponseDTO delete(@PathVariable("itemId") Long id, Authentication authentication) {
-        salesItemService.deleteItem(id, authentication.getName());
+    public ResponseDTO deleteSalesItem(@PathVariable("itemId") Long id, Authentication authentication) {
+        salesItemService.deleteSalesItem(id, authentication.getName());
         return new ResponseDTO("물품을 삭제했습니다.");
     }
 

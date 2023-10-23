@@ -28,7 +28,8 @@ public class NegotiationService {
     private final SalesItemRepository salesItemRepository;
     private final UserRepository userRepository;
 
-    public void saveNego(Long itemId, NegotiationDTO negotiationDTO, String username) {
+    // 해당 중고 물품에 대한 구매 제안 등록
+    public void createNegotiation(Long itemId, NegotiationDTO negotiationDTO, String username) {
         Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
         if (optionalSalesItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -42,7 +43,8 @@ public class NegotiationService {
         negotiationRepository.save(negotiationDTO.toEntity(optionalSalesItem.get(), optionalUser.get()));
     }
 
-    public Page<NegotiationResponseDTO> readNego(Long itemId, Integer pageNumber, String username) {
+    // 해당 중고 물픔의 구매 제안 목록
+    public Page<NegotiationResponseDTO> readAllNegotiation(Long itemId, Integer pageNumber, String username) {
 
         Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
         if (optionalSalesItem.isEmpty()) {
@@ -74,7 +76,8 @@ public class NegotiationService {
 
     }
 
-    public String updateNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO, String username) {
+    // 구매 제안 수정
+    public String updateNegotiation(Long itemId, Long proposalId, NegotiationDTO negotiationDTO, String username) {
 
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty()) {
@@ -150,7 +153,8 @@ public class NegotiationService {
 
     }
 
-    public void deleteNego(Long itemId, Long proposalId, NegotiationDTO negotiationDTO, String username) {
+    // 구매 제안 삭제
+    public void deleteNegotiation(Long itemId, Long proposalId, NegotiationDTO negotiationDTO, String username) {
         Optional<Negotiation> optionalNegotiation = negotiationRepository.findById(proposalId);
         if (optionalNegotiation.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);

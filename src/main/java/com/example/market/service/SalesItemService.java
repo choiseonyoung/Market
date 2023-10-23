@@ -31,8 +31,8 @@ public class SalesItemService {
     private final SalesItemRepository salesItemRepository;
     private final UserRepository userRepository;
 
-
-    public void saveItem(SalesItemDTO salesItemDTO, String username) {
+    // 중고 물품 등록
+    public void createSalesItem(SalesItemDTO salesItemDTO, String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         if (optionalUser.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -40,16 +40,16 @@ public class SalesItemService {
         salesItemRepository.save(salesItemDTO.toEntity(optionalUser.get()));
     }
 
-
-    public Page<ItemResponseDTO> readAllItem(Integer pageNumber, Integer pageSize) {
+    // 중고 물품 목록 조회
+    public Page<ItemResponseDTO> readAllSalesItem(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
         Page<SalesItem> salesItemPage = salesItemRepository.findAll(pageable);
         Page<ItemResponseDTO> itemDtoPage = salesItemPage.map(ItemResponseDTO::fromEntity);
         return itemDtoPage;
     }
 
-
-    public ItemResponseDTO readItem(Long id) {
+    // 해당 중고 물품 조회
+    public ItemResponseDTO readSalesItem(Long id) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if (optionalItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -57,8 +57,8 @@ public class SalesItemService {
         return ItemResponseDTO.fromEntity(optionalItem.get());
     }
 
-
-    public void updateItem(Long id, SalesItemDTO salesItemDTO, String username) {
+    // 중고 물품 수정
+    public void updateSalesItem(Long id, SalesItemDTO salesItemDTO, String username) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if (optionalItem.isEmpty()) {
             log.info("updateItem item not found");
@@ -82,7 +82,8 @@ public class SalesItemService {
         salesItemRepository.save(salesItem);
     }
 
-    public void updateItemImage(Long id, MultipartFile multipartFile, String username) throws IOException {
+    // 중고 물품 이미지 등록
+    public void updateSalesItemImage(Long id, MultipartFile multipartFile, String username) throws IOException {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if(optionalItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
@@ -107,8 +108,8 @@ public class SalesItemService {
         salesItemRepository.save(salesItem);
     }
 
-
-    public void deleteItem(Long id, String username) {
+    // 중고 물품 삭제
+    public void deleteSalesItem(Long id, String username) {
         Optional<SalesItem> optionalItem = salesItemRepository.findById(id);
         if(optionalItem.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
