@@ -2,6 +2,7 @@ package com.example.market.domain.user.controller;
 
 import com.example.market.domain.user.dto.UserLoginDTO;
 import com.example.market.domain.user.dto.UserSignupDTO;
+import com.example.market.domain.user.entity.CustomUserDetails;
 import com.example.market.domain.user.service.UserService;
 import com.example.market.domain.user.dto.JwtTokenDTO;
 import com.example.market.global.jwt.JwtTokenUtil;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserDetailsManager userDetailsManager;
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -27,7 +27,7 @@ public class UserController {
     // 회원가입
     @PostMapping("/signup")
     public String signup(@RequestBody UserSignupDTO dto) {
-        userService.signup(dto);
+        userService.createUser(CustomUserDetails.fromDto(dto));
         return "회원가입 성공";
     }
 

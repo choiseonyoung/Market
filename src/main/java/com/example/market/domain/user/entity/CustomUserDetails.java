@@ -1,17 +1,14 @@
 package com.example.market.domain.user.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.example.market.domain.user.dto.UserSignupDTO;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
     @Getter
@@ -82,6 +79,15 @@ public class CustomUserDetails implements UserDetails {
         entity.setEmail(email);
         entity.setAddress(address);
         return entity;
+    }
+
+    public static UserDetails fromDto(UserSignupDTO dto) {
+        return CustomUserDetails.builder().username(dto.getUsername())
+                .password(dto.getPassword())
+                .phoneNumber(dto.getPhoneNumber())
+                .email(dto.getEmail())
+                .address(dto.getAddress())
+                .build();
     }
 
     @Override

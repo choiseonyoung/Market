@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: secret
   datasource:
     url: jdbc:sqlite:db.sqlite
     driver-class-name: org.sqlite.JDBC
@@ -11,5 +13,3 @@ spring:
   sql:
     init:
       mode: always
-jwt:
-  secret: sifvjalnisfjdsajflximjsadilfjsnviljfsdjfmlibsjfils
