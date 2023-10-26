@@ -17,6 +17,7 @@ import java.time.Instant;
 @Component
 public class JwtTokenUtil {
     private final Key signingKey;
+    // 가지고 있는 Key 정보를 바탕으로 JWT 정보 해석
     private final JwtParser jwtParser;
 
     public JwtTokenUtil(@Value("${jwt.secret}") String jwtSecret) {
@@ -46,6 +47,7 @@ public class JwtTokenUtil {
 
     // JWT 발급
     public String generateToken(UserDetails userDetails) {
+        // JWT에 담길 정보
         Claims jwtClaims = Jwts.claims()
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(Date.from(Instant.now()))
@@ -54,7 +56,7 @@ public class JwtTokenUtil {
         return Jwts.builder()
                 .setClaims(jwtClaims)
                 .signWith(signingKey)
-                .compact();
+                .compact(); // 실제 Token을 문자열로 만들어 반환
     }
 
 

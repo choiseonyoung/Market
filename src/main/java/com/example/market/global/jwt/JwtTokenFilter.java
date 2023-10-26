@@ -28,18 +28,17 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader
-                = request.getHeader(HttpHeaders.AUTHORIZATION);
+        // Authorization 헤더 존재하는지 확인
+        String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        // 존재한다면 헤더가 Bearer 로 시작하며, 뒤의 JWT가 유효한지 확인
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.split(" ")[1];
             if (jwtTokenUtil.validate(token)) {
-                SecurityContext context
-                        = SecurityContextHolder.createEmptyContext();
+                SecurityContext context = SecurityContextHolder.createEmptyContext();
                 String username = jwtTokenUtil
                         .parseClaims(token)
                         .getSubject();
-                AbstractAuthenticationToken authenticationToken
-                        = new UsernamePasswordAuthenticationToken(
+                AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         CustomUserDetails.builder()
                                 .username(username)
                                 .build(),

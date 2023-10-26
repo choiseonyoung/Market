@@ -16,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final JwtTokenUtil jwtTokenUtil;
-    private final UserService userService;
+    private final JwtTokenUtil jwtTokenUtil; // JWT 발급
+    private final UserService userService; // 사용자 정보 확인
 
     // 회원가입
     @PostMapping("/signup")
