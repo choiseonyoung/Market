@@ -2,15 +2,12 @@ package com.example.market.domain.user.controller;
 
 import com.example.market.domain.user.dto.UserLoginDTO;
 import com.example.market.domain.user.dto.UserSignupDTO;
-import com.example.market.domain.user.entity.CustomUserDetails;
 import com.example.market.domain.user.service.UserService;
 import com.example.market.domain.user.dto.JwtTokenDTO;
 import com.example.market.global.jwt.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -19,15 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final PasswordEncoder passwordEncoder;
     private final JwtTokenUtil jwtTokenUtil;
-
     private final UserService userService;
 
     // 회원가입
     @PostMapping("/signup")
     public String signup(@RequestBody UserSignupDTO dto) {
-        userService.createUser(CustomUserDetails.fromDto(dto));
+        userService.signup(dto);
         return "회원가입 성공";
     }
 

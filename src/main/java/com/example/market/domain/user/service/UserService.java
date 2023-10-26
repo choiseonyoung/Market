@@ -32,15 +32,25 @@ public class UserService implements UserDetailsManager {
 
     // 회원가입
     public void signup(UserSignupDTO dto) {
+        if (this.userExists(dto.getUsername()))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+
         if (dto.getPassword().equals(dto.getPasswordCheck())) {
-//                UserDetails userDetails = CustomUserDetails.fromDto(dto);
-            createUser(CustomUserDetails.builder()
+            CustomUserDetails userDetails = CustomUserDetails.builder()
                     .username(dto.getUsername())
                     .password(passwordEncoder.encode(dto.getPassword()))
                     .phoneNumber(dto.getPhoneNumber())
                     .email(dto.getEmail())
                     .address(dto.getAddress())
-                    .build());
+                    .build();
+
+            User user = userDetails.newEntity();
+
+            try {
+                userRepository.save(user);
+            } catch (ClassCastException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         } else {
             // 비밀번호 불일치 처리
         }
@@ -48,13 +58,7 @@ public class UserService implements UserDetailsManager {
 
     @Override
     public void createUser(UserDetails user) {
-        if (this.userExists(user.getUsername()))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
-        try {
-            userRepository.save(((CustomUserDetails) user).newEntity());
-        } catch (ClassCastException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+
     }
 
     public UserDetails login(UserLoginDTO dto) {

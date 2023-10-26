@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
-@Builder
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
@@ -72,21 +71,12 @@ public class CustomUserDetails implements UserDetails {
     }
 
     public User newEntity() {
-        User entity = new User();
-        entity.setUsername(username);
-        entity.setPassword(password);
-        entity.setPhoneNumber(phoneNumber);
-        entity.setEmail(email);
-        entity.setAddress(address);
-        return entity;
-    }
-
-    public static UserDetails fromDto(UserSignupDTO dto) {
-        return CustomUserDetails.builder().username(dto.getUsername())
-                .password(dto.getPassword())
-                .phoneNumber(dto.getPhoneNumber())
-                .email(dto.getEmail())
-                .address(dto.getAddress())
+        return User.builder()
+                .username(username)
+                .password(password)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .address(address)
                 .build();
     }
 
@@ -100,5 +90,15 @@ public class CustomUserDetails implements UserDetails {
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 '}';
+    }
+
+    @Builder
+    public CustomUserDetails(Long id, String username, String password, String phoneNumber, String email, String address) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
     }
 }

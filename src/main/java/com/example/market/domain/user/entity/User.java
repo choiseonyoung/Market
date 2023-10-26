@@ -4,14 +4,13 @@ import com.example.market.domain.comment.entity.Comment;
 import com.example.market.domain.negotiation.entity.Negotiation;
 import com.example.market.domain.salesitem.entity.SalesItem;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.List;
 
 @Entity
 @Getter
-@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +33,16 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments;
 
+    @Builder
+    public User(Long id, String username, String password, String phoneNumber, String email, String address, List<SalesItem> salesItems, List<Negotiation> negotiations, List<Comment> comments) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.address = address;
+        this.salesItems = salesItems;
+        this.negotiations = negotiations;
+        this.comments = comments;
+    }
 }
