@@ -33,8 +33,8 @@ public class SalesItemController {
 
     // 중고 물품 목록 조회
     @GetMapping
-    public Page<ItemResponseDTO> readAllSalesItem(@RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "0") Integer limit) {
-        return salesItemService.readAllSalesItem(page, limit);
+    public Page<ItemResponseDTO> readAllSalesItem(@RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return salesItemService.readAllSalesItem(page);
     }
 
     // 해당 중고 물품 조회

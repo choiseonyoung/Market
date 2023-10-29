@@ -41,8 +41,8 @@ public class SalesItemService {
     }
 
     // 중고 물품 목록 조회
-    public Page<ItemResponseDTO> readAllSalesItem(Integer pageNumber, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("id").descending());
+    public Page<ItemResponseDTO> readAllSalesItem(Integer pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber, 10, Sort.by("id").descending());
         Page<SalesItem> salesItemPage = salesItemRepository.findAll(pageable);
         Page<ItemResponseDTO> itemDtoPage = salesItemPage.map(ItemResponseDTO::fromEntity);
         return itemDtoPage;

@@ -28,8 +28,8 @@ public class CommentController {
 
     // 댓글 목록 조회
     @GetMapping
-    public Page<CommentResponseDTO> readAllComment(@PathVariable("itemId") Long itemId, @RequestParam(value = "page", defaultValue = "0") Integer page, @RequestParam(value = "limit", defaultValue = "0") Integer limit) {
-        return commentService.readAllComment(itemId, page, limit);
+    public Page<CommentResponseDTO> readAllComment(@PathVariable("itemId") Long itemId, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        return commentService.readAllComment(itemId, page);
     }
 
     // 댓글 수정
