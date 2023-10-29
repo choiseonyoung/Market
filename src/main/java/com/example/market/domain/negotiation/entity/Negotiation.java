@@ -19,8 +19,7 @@ public class Negotiation {
 
     private Integer suggestedPrice;
 
-    // 제안, 수락, 거절, 확정
-    private String status;
+    private NegotiationStatus status;
 
     private String writer;
 

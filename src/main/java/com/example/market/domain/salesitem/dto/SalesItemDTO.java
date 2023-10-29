@@ -1,6 +1,7 @@
 package com.example.market.domain.salesitem.dto;
 
 import com.example.market.domain.salesitem.entity.SalesItem;
+import com.example.market.domain.salesitem.entity.SalesItemStatus;
 import com.example.market.domain.user.entity.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -30,7 +31,7 @@ public class SalesItemDTO {
                 .description(description)
                 .iamgeUrl(iamgeUrl)
                 .minPriceWanted(minPriceWanted)
-                .status("판매중")
+                .status(SalesItemStatus.SELL)
                 .user(user)
                 .build();
     }

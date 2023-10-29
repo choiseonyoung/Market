@@ -1,6 +1,8 @@
 package com.example.market.domain.negotiation.service;
 
+import com.example.market.domain.negotiation.entity.NegotiationStatus;
 import com.example.market.domain.negotiation.repository.NegotiationRepository;
+import com.example.market.domain.salesitem.entity.SalesItemStatus;
 import com.example.market.domain.salesitem.repository.SalesItemRepository;
 import com.example.market.domain.user.entity.User;
 import com.example.market.domain.user.repository.UserRepository;
@@ -106,10 +108,10 @@ public class NegotiationService {
             Optional<SalesItem> optionalSalesItem = salesItemRepository.findById(itemId);
             SalesItem salesItem = optionalSalesItem.get();
 
-            String status = negotiationDTO.getStatus();
+            NegotiationStatus status = negotiationDTO.getStatus();
 
             // 구매 제안 상태 변경 (판매자)
-            if (status.equals("수락") || status.equals("거절")) {
+            if (status.equals(NegotiationStatus.ACCEPTED) || status.equals(NegotiationStatus.REFUSE)) {
                 // writer와 password가 물품 등록할 때의 값과 일치하지 않을 경우 실패
                 if(!salesItem.getUser().getId().equals(user.getId())) {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -122,7 +124,7 @@ public class NegotiationService {
             // 구매 확정 (구매 제안자)
             if (status.equals("확정")) {
                 // 제안의 상태가 수락이 아닐 경우 실패
-                if (!negotiation.getStatus().equals("수락")) {
+                if (!negotiation.getStatus().equals(NegotiationStatus.ACCEPTED)) {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
                 }
                 // writer 와 password 가 제안 등록할 때의 값과 일치하지 않을 경우 실패
@@ -130,16 +132,16 @@ public class NegotiationService {
                     throw new ResponseStatusException(HttpStatus.FORBIDDEN);
                 }
                 // 구매 확정
-                negotiation.setStatus("확정");
+                negotiation.setStatus(NegotiationStatus.CONFIRMATION);
 
                 // 구매제안확정 -> SalesItem의 status "판매 완료"
-                salesItem.setStatus("판매 완료");
+                salesItem.setStatus(SalesItemStatus.SOLD_OUT);
 
                 // 구매제안확정 -> 확정되지 않은 다른 Negotiation의 status "거절"
                 List<Negotiation> negoList = negotiationRepository.findBySalesItemId(itemId);
                 for (Negotiation nego : negoList) {
                     if (!nego.getStatus().equals("확정")) {
-                        nego.setStatus("거절");
+                        nego.setStatus(NegotiationStatus.REFUSE);
                         negotiationRepository.save(nego);
                     }
                 }

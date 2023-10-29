@@ -1,6 +1,7 @@
 package com.example.market.domain.salesitem.dto;
 
 import com.example.market.domain.salesitem.entity.SalesItem;
+import com.example.market.domain.salesitem.entity.SalesItemStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ public class ItemResponseDTO {
     private String description;
     private Integer minPriceWanted;
     private String imageUrl;
-    private String status;
+    private SalesItemStatus status;
 
     public static ItemResponseDTO fromEntity(SalesItem entity) {
         ItemResponseDTO dto = ItemResponseDTO.builder()

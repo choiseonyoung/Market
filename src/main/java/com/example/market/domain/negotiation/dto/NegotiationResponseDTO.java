@@ -1,6 +1,7 @@
 package com.example.market.domain.negotiation.dto;
 
 import com.example.market.domain.negotiation.entity.Negotiation;
+import com.example.market.domain.negotiation.entity.NegotiationStatus;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,7 +13,7 @@ public class NegotiationResponseDTO {
 
     private Integer suggestedPrice;
 
-    private String status;
+    private NegotiationStatus status;
 
     public static NegotiationResponseDTO fromEntity(Negotiation entity) {
         NegotiationResponseDTO dto = NegotiationResponseDTO.builder()

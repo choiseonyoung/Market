@@ -27,8 +27,7 @@ public class SalesItem {
 
     private Integer minPriceWanted;
 
-    // 판매중, 판매완료
-    private String status;
+    private SalesItemStatus status;
 
     private String writer;
 
