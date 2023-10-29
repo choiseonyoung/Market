@@ -1,7 +1,7 @@
 package com.example.market.domain.user.controller;
 
 import com.example.market.domain.user.dto.UserLoginDTO;
-import com.example.market.domain.user.dto.UserSignupDTO;
+import com.example.market.domain.user.dto.SignupRequestDTO;
 import com.example.market.domain.user.service.UserService;
 import com.example.market.domain.user.dto.JwtTokenDTO;
 import com.example.market.global.jwt.JwtTokenUtil;
@@ -21,7 +21,7 @@ public class UserController {
 
     // 회원가입
     @PostMapping("/signup")
-    public String signup(@RequestBody UserSignupDTO dto) {
+    public String signup(@RequestBody SignupRequestDTO dto) {
         userService.signup(dto);
         return "회원가입 성공";
     }

@@ -1,27 +1,31 @@
 package com.example.market.domain.user.entity;
 
-import com.example.market.domain.user.dto.UserSignupDTO;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 
+@Getter
 @RequiredArgsConstructor
 public class CustomUserDetails implements UserDetails {
 
-    @Getter
     private Long id;
+
     private String username;
+
     private String password;
 
-    @Getter
-    private String phoneNumber;
+    private String name;
 
-    @Getter
+    private String nickname;
+
     private String email;
 
-    @Getter
+    private String phoneNumber;
+
+    private Gender gender;
+
     private String address;
 
     @Override
@@ -64,8 +68,10 @@ public class CustomUserDetails implements UserDetails {
                 .id(entity.getId())
                 .username(entity.getUsername())
                 .password(entity.getPassword())
-                .phoneNumber(entity.getPhoneNumber())
+                .name(entity.getName())
                 .email(entity.getEmail())
+                .phoneNumber(entity.getPhoneNumber())
+                .gender(entity.getGender())
                 .address(entity.getAddress())
                 .build();
     }
@@ -74,31 +80,25 @@ public class CustomUserDetails implements UserDetails {
         return User.builder()
                 .username(username)
                 .password(password)
-                .phoneNumber(phoneNumber)
+                .name(name)
+                .nickname(nickname)
                 .email(email)
+                .phoneNumber(phoneNumber)
+                .gender(gender)
                 .address(address)
                 .build();
     }
 
-    @Override
-    public String toString() {
-        return "CustomUserDetails{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", email='" + email + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
-
     @Builder
-    public CustomUserDetails(Long id, String username, String password, String phoneNumber, String email, String address) {
+    public CustomUserDetails(Long id, String username, String password, String name, String nickname, String email, String phoneNumber, Gender gender, String address) {
         this.id = id;
         this.username = username;
         this.password = password;
-        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.nickname = nickname;
         this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.gender = gender;
         this.address = address;
     }
 }

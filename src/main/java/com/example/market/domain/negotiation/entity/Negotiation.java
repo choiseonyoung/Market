@@ -19,6 +19,8 @@ public class Negotiation {
 
     private Integer suggestedPrice;
 
+    @Column(nullable = false, length = 15)
+    @Enumerated(EnumType.STRING)
     private NegotiationStatus status;
 
     private String writer;

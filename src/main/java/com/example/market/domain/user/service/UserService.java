@@ -1,7 +1,7 @@
 package com.example.market.domain.user.service;
 
 import com.example.market.domain.user.dto.UserLoginDTO;
-import com.example.market.domain.user.dto.UserSignupDTO;
+import com.example.market.domain.user.dto.SignupRequestDTO;
 import com.example.market.domain.user.entity.User;
 import com.example.market.domain.user.repository.UserRepository;
 import com.example.market.domain.user.entity.CustomUserDetails;
@@ -31,7 +31,7 @@ public class UserService implements UserDetailsManager {
     }
 
     // 회원가입
-    public void signup(UserSignupDTO dto) {
+    public void signup(SignupRequestDTO dto) {
         if (this.userExists(dto.getUsername()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
@@ -39,8 +39,11 @@ public class UserService implements UserDetailsManager {
             CustomUserDetails userDetails = CustomUserDetails.builder()
                     .username(dto.getUsername())
                     .password(passwordEncoder.encode(dto.getPassword()))
-                    .phoneNumber(dto.getPhoneNumber())
+                    .name(dto.getName())
+                    .nickname(dto.getNickname())
                     .email(dto.getEmail())
+                    .phoneNumber(dto.getPhoneNumber())
+                    .gender(dto.getGender())
                     .address(dto.getAddress())
                     .build();
 

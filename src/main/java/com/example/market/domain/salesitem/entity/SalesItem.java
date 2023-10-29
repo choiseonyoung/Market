@@ -27,6 +27,8 @@ public class SalesItem {
 
     private Integer minPriceWanted;
 
+    @Column(nullable = false, length = 10)
+    @Enumerated(EnumType.STRING)
     private SalesItemStatus status;
 
     private String writer;
