@@ -16,12 +16,15 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 20)
     private String username;
+    @Column(nullable = false, length = 10)
     private String password;
-
+    @Column(nullable = false, unique = true, length = 11)
     private String phoneNumber;
+    @Column(nullable = false, unique = true, length = 50)
     private String email;
+    @Column(length = 10)
     private String address;
 
     @OneToMany(mappedBy = "user")

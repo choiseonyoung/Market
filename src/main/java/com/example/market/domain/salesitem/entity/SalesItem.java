@@ -16,10 +16,13 @@ public class SalesItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, length = 50)
     private String title;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(nullable = false, length = 100)
     private String iamgeUrl;
 
     private Integer minPriceWanted;

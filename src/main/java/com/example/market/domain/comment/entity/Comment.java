@@ -21,8 +21,10 @@ public class Comment {
 
     private String password;
 
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Column(columnDefinition = "TEXT")
     private String reply;
 
     @ManyToOne
@@ -31,6 +33,5 @@ public class Comment {
     // 댓글 작성자
     @ManyToOne
     private User user;
-
 
 }
