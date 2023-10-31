@@ -1,7 +1,7 @@
 package com.example.market.domain.user.service;
 
 import com.example.market.domain.user.dto.UserLoginDTO;
-import com.example.market.domain.user.dto.SignupRequestDTO;
+import com.example.market.domain.user.dto.SignupFormDTO;
 import com.example.market.domain.user.entity.User;
 import com.example.market.domain.user.repository.UserRepository;
 import com.example.market.domain.user.entity.CustomUserDetails;
@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
@@ -31,11 +32,20 @@ public class UserService implements UserDetailsManager {
     }
 
     // 회원가입
-    public void signup(SignupRequestDTO dto) {
+    public void signup(SignupFormDTO dto) {
         if (this.userExists(dto.getUsername()))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
 
         if (dto.getPassword().equals(dto.getPasswordCheck())) {
+            // === 중복 검사 ===
+            if (this.userExists(dto.getUsername()))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            if (this.nicknameExists(dto.getNickname()))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            if (this.emailExists(dto.getEmail()))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            // ================
+
             CustomUserDetails userDetails = CustomUserDetails.builder()
                     .username(dto.getUsername())
                     .password(passwordEncoder.encode(dto.getPassword()))
@@ -87,10 +97,26 @@ public class UserService implements UserDetailsManager {
 
     }
 
+    // username 중복 검사
+    @Transactional(readOnly = true)
     @Override
     public boolean userExists(String username) {
         return userRepository.existsByUsername(username);
     }
 
+    // 닉네임 중복 검사
+    @Transactional(readOnly = true)
+    public boolean nicknameExists(String nickname) {
+        boolean nicknameDuplicate = userRepository.existsByNickname(nickname);
+        return nicknameDuplicate;
+
+    }
+
+    // 이메일 중복 검사
+    @Transactional(readOnly = true)
+    public boolean emailExists(String email) {
+        boolean emailDuplicate = userRepository.existsByEmail(email);
+        return emailDuplicate;
+    }
 
 }
