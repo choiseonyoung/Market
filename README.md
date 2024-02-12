@@ -21,7 +21,9 @@
   - Spring Data JPA
   - Spring Boot DevTools
   - Lombok
-  - Validation   
+  - Validation
+  - Spring Security
+  - Jwt
 
 <br />
 
